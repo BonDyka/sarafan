@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +43,9 @@ public class SarafanDelegatingOAut2UserService extends DelegatingOAuth2UserServi
 
             return newUser;
         });
+        user.setLastVisit(LocalDateTime.now());
+
+        userDetailsRepo.save(user);
 
         return oAuth2User;
     }
