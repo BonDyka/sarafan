@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table
+@Data
 @ToString(of = {"id", "text"})
 @EqualsAndHashCode(of = {"id"})
 public class Message {
@@ -25,27 +26,4 @@ public class Message {
     @JsonView(Views.FullMessage.class)
     private LocalDateTime created;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
 }
