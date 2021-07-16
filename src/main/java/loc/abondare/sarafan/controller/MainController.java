@@ -3,6 +3,7 @@ package loc.abondare.sarafan.controller;
 import loc.abondare.sarafan.repo.MessageRepo;
 import loc.abondare.sarafan.repo.UserDetailsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,9 @@ public class MainController {
     private final UserDetailsRepo userDetailsRepo;
     private final MessageRepo messageRepo;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     @Autowired
     public MainController(UserDetailsRepo userDetailsRepo, MessageRepo messageRepo) {
         this.userDetailsRepo = userDetailsRepo;
@@ -32,6 +36,7 @@ public class MainController {
         data.put("messages", messageRepo.findAll());
 
         model.addAttribute("frontendData", data);
+        model.addAttribute("isDevMode", "dev".equals(profile));
         return "index";
     }
 }
