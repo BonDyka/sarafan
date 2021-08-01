@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/")
@@ -32,8 +33,10 @@ public class MainController {
     public String main(Model model, @AuthenticationPrincipal OAuth2User oAuth2User) {
         HashMap<Object, Object> data = new HashMap<>();
 
-        data.put("profile", oAuth2User != null ? userDetailsRepo.findById(oAuth2User.getAttribute("sub")).get() : null);
-        data.put("messages", messageRepo.findAll());
+        if (oAuth2User != null) {
+            data.put("profile", userDetailsRepo.findById(Objects.requireNonNull(oAuth2User.getAttribute("sub"))).orElse(null));
+            data.put("messages", messageRepo.findAll());
+        }
 
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(profile));
