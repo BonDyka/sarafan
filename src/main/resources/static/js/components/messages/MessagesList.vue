@@ -1,14 +1,14 @@
 <template>
-    <div style="position: relative; width:300px">
+    <v-layout align-space-around justify-start column>
         <message-form :messages="messages" :messageAttr="message"/>
-        <h3>List</h3>
-        <message-row v-for="message in messages"
+        <v-spacer></v-spacer>
+        <message-row v-for="message in sortedMessages"
                      :key="message.id"
                      :editMessage="editMessage"
                      :deleteMessage="deleteMessage"
                      :messages="messages"
                      :message="message"/>
-    </div>
+    </v-layout>
 </template>
 
 <script>
@@ -26,6 +26,11 @@
                 message:null
             };
         },
+        computed: {
+            sortedMessages() {
+                return this.messages.sort((a, b) => (b.id - a.id))
+            }
+        },
         methods: {
             editMessage(message) {
                 this.message = message
@@ -33,7 +38,7 @@
             deleteMessage(message) {
                 this.$resource('/message{/id}').delete({id: message.id}).then(resp => {
                         if (resp.ok) {
-                            this.messages.splice(this.messages.indexOf(this.message), 1);
+                            this.messages.splice(this.messages.indexOf(message), 1);
                         }
                     }
                 )

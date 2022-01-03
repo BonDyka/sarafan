@@ -1,8 +1,13 @@
 <template>
-    <div>
-        <input type="text" placeholder="write something" v-model="text"/>
-        <input type="button" value="Save" @click="save"/>
-    </div>
+    <v-layout row>
+        <v-text-field
+                label="New message"
+                placeholder="Write something..."
+                v-model="text"/>
+        <v-btn icon @click="save">
+            <v-icon>mdi-send</v-icon>
+        </v-btn>
+    </v-layout>
 </template>
 
 <script>
