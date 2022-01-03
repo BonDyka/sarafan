@@ -11,46 +11,51 @@
 </template>
 
 <script>
-    import { sendMessage } from 'util/ws'
+    import messagesApi from 'api/messages'
 
 
 
     export default {
         props: ['messages', 'messageAttr'],
         data() {
-            return {text: '', id: ''};
+            return {text: '', id: ''}
         },
         watch: {
             messageAttr: function (newVal) {
-                this.text = newVal.text;
-                this.id = newVal.id;
+                this.text = newVal.text
+                this.id = newVal.id
             }
         },
         methods: {
             save() {
-                sendMessage({id: this.id, text: this.text})
-                this.text = '';
-                this.id = '';
-
-                /*const message = {text: this.text};
+                const message = {
+                    id:this.id,
+                    text: this.text
+                }
 
                 if (this.id) {
-                    this.$resource('/message{/id}').update({id:this.id}, message).then(resp =>
+                    messagesApi.update(message).then(resp =>
                         resp.json().then(data => {
-                            const index = getIndex(this.messages, data.id);
-                            this.messages.splice(index, 1, data);
-                            this.text = '';
-                            this.id = '';
-                        })
-                    );
-                } else {
-                    this.$resource('/message{/id}').save({}, message).then(resp =>
-                        resp.json().then(data => {
-                            this.messages.push(data);
-                            this.text = '';
+                            const index = this.messages.findIndex(item => item.id === data.id)
+                            this.messages.splice(index, 1, data)
                         })
                     )
-                }*/
+                } else {
+                    messagesApi.add(message).then(resp =>
+                        resp.json().then(data => {
+                            const index = this.messages.findIndex(item => item.id === data.id)
+
+                            if (index > -1) {
+                                this.messages.splice(index, 1, data)
+                            } else {
+                                this.messages.push(data)
+                            }
+                        })
+                    )
+                }
+
+                this.text = ''
+                this.id = ''
             }
         }
     }

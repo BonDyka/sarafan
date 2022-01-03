@@ -14,6 +14,7 @@
 <script>
     import MessageRow from 'components/messages/MessageRow.vue'
     import MessageForm from 'components/messages/MessageForm.vue'
+    import messagesApi from 'api/messages'
 
     export default {
         props: ['messages'],
@@ -24,7 +25,7 @@
         data() {
             return {
                 message:null
-            };
+            }
         },
         computed: {
             sortedMessages() {
@@ -36,9 +37,12 @@
                 this.message = message
             },
             deleteMessage(message) {
-                this.$resource('/message{/id}').delete({id: message.id}).then(resp => {
+                messagesApi.remove(message.id).then(resp => {
                         if (resp.ok) {
-                            this.messages.splice(this.messages.indexOf(message), 1);
+                            let index = this.messages.indexOf(message)
+                            if (index > -1) {
+                                this.messages.splice(index, 1)
+                            }
                         }
                     }
                 )
