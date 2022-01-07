@@ -11,9 +11,7 @@
 </template>
 
 <script>
-    import messagesApi from 'api/messages'
-
-
+    import { mapActions } from 'vuex'
 
     export default {
         props: ['messages', 'messageAttr'],
@@ -27,6 +25,7 @@
             }
         },
         methods: {
+          ...mapActions(['addMessageAction', 'updateMessageAction']),
             save() {
                 const message = {
                     id:this.id,
@@ -34,24 +33,9 @@
                 }
 
                 if (this.id) {
-                    messagesApi.update(message).then(resp =>
-                        resp.json().then(data => {
-                            const index = this.messages.findIndex(item => item.id === data.id)
-                            this.messages.splice(index, 1, data)
-                        })
-                    )
+                    this.updateMessageAction(message)
                 } else {
-                    messagesApi.add(message).then(resp =>
-                        resp.json().then(data => {
-                            const index = this.messages.findIndex(item => item.id === data.id)
-
-                            if (index > -1) {
-                                this.messages.splice(index, 1, data)
-                            } else {
-                                this.messages.push(data)
-                            }
-                        })
-                    )
+                    this.addMessageAction(message)
                 }
 
                 this.text = ''
